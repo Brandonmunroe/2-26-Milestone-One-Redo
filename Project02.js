@@ -1,30 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task List</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Task List</h1>
-        <form id="taskForm">
-            <input type="text" id="taskTitle" placeholder="Enter task title" required>
-            <select id="taskPriority">
-                <option value="low">Low Priority</option>
-                <option value="medium">Medium Priority</option>
-                <option value="high">High Priority</option>
-            </select>
-            <input type="radio" id="statusPending" name="taskStatus" value="pending" checked>
-            <label for="statusPending">Pending</label>
-            <input type="radio" id="statusCompleted" name="taskStatus" value="completed">
-            <label for="statusCompleted">Completed</label>
-            <button type="submit">Add Task</button>
-        </form>
-        <ul id="taskList"></ul>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', function() {
+    const taskForm = document.getElementById('taskForm');
+    const taskList = document.getElementById('taskList');
+    
+    taskForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const taskTitle = document.getElementById('taskTitle').value;
+      const taskPriority = document.getElementById('taskPriority').value;
+      const taskStatus = document.querySelector('input[name="taskStatus"]:checked').value;
+      
+      if (taskTitle && taskPriority && taskStatus) {
+        const task = {
+          title: taskTitle,
+          priority: taskPriority,
+          status: taskStatus
+        };
+        
+        addTaskToList(task);
+        taskForm.reset();
+      }
+    });
+    
+    function addTaskToList(task) {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span class="${task.status === 'completed' ? 'completed' : ''}">${task.title} - ${task.priority}</span>
+        <button class="remove-btn">Remove</button>
+        <button class="complete-btn">Mark as ${task.status === 'completed' ? 'Pending' : 'Complete'}</button>
+      `;
+      
+      taskList.appendChild(li);
+      
+      const removeBtn = li.querySelector('.remove-btn');
+      removeBtn.addEventListener('click', function() {
+        li.remove();
+      });
+      
+      const completeBtn = li.querySelector('.complete-btn');
+      completeBtn.addEventListener('click', function() {
+        if (task.status === 'completed') {
+          task.status = 'pending';
+          li.querySelector('span').classList.remove('completed');
+          completeBtn.textContent = 'Mark as Complete';
+        } else {
+          task.status = 'completed';
+          li.querySelector('span').classList.add('completed');
+          completeBtn.textContent = 'Mark as
+        }
